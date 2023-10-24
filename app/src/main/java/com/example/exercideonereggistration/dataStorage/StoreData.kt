@@ -13,16 +13,17 @@ import kotlinx.coroutines.flow.map
 
 
 class StoreData(private val context: Context) {
+
     companion object {
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("storeData")
-        val USERNAME = stringPreferencesKey("store_Data")
+        public val numberKey = stringPreferencesKey("NUMBER")
+        public val passwordKey= stringPreferencesKey("PASSWORD")
 
     }
 
-    suspend fun getData(key: String): String? {
-        val dataStoreKey = stringPreferencesKey(key)
+    suspend fun getData(key: Preferences.Key<String>): String? {
         val preferences = context.dataStore.data.first()
-        return preferences[dataStoreKey]
+        return preferences[key]
 
     }
 
@@ -31,8 +32,7 @@ class StoreData(private val context: Context) {
               preferences[USERNAME] ?: ""
 
           }*/
-    suspend fun saveData(key: String, value: String) {
-        val dataStoreKey = stringPreferencesKey(key)
+    suspend fun saveData(dataStoreKey: Preferences.Key<String>, value: String) {
         context.dataStore.edit { preferences ->
             preferences[dataStoreKey] = value
         }

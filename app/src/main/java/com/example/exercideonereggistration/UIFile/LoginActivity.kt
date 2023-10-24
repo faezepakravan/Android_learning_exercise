@@ -1,11 +1,13 @@
 package com.example.exercideonereggistration.UIFile
 
-import android.content.Context
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,48 +29,73 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.exercideonereggistration.dataStorage.StoreData
-import androidx.compose.foundation.layout.Column
-import androidx.compose.runtime.remember
-import androidx.lifecycle.lifecycleScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import com.example.exercideonereggistration.components.alertDialog
+
 import kotlinx.coroutines.launch
 import com.example.exercideonereggistration.ui.theme.AppThemed
-import com.example.exercideonereggistration.ui.theme.LocalAppColor
+
+import kotlinx.coroutines.delay
+
 
 class LoginActivity() : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppThemed {
-                val appColor = LocalAppColor.current
-                SetStatusBarColor(color = appColor.mainBackground)
-
-                LogingUi()
+            AppThemed() {
+                LogingUi(context = this)
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-private fun LogingUi() {
+private fun LogingUi(context: Activity) {
+
     var textPassword by remember { mutableStateOf(TextFieldValue("")) }
     var number by remember { mutableStateOf(TextFieldValue()) }
     var maxChar = 12
-
     var openAlertDialog = remember { mutableStateOf(false) }
+    val dataStored = StoreData(context)
+    val coroutinScope = rememberCoroutineScope()
+    var openLoadingAlertDialog = remember { mutableStateOf(false) }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+    var passwordVisible by remember { mutableStateOf(false) }
 
 
-
-
-
+    /* Box(
+         Modifier
+             .fillMaxSize()
+            // .background(MaterialTheme.colorScheme.onPrimary)
+     ) {
+ */
     Column(
+
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 350.dp),
@@ -76,71 +103,134 @@ private fun LogingUi() {
         verticalArrangement = Arrangement.spacedBy(10.dp)
 
     ) {
-        TextField(
-            value = number,
-            label = { Text(text = "Input Your phone number") },
-            onValueChange = { it -> number = it },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
 
-
-        TextField(
-            value = textPassword,
-            label = { Text(text = "Input Your Password") },
+        TextField(value = number,
+            label = { Text(text = "Input Your number") },
             singleLine = true,
             onValueChange = {
-                if (it.text.length <= maxChar) textPassword = it
-            }
+                val cleanedText = it.text.replace(" ", "")
+                if (cleanedText.length <= 11) {
+                    number = TextFieldValue(text = cleanedText, selection = it.selection)
+                }
+            },
+            shape = RoundedCornerShape(50.dp),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next
+            ),
+            modifier = Modifier.padding(3.dp),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusRequester.requestFocus()
+                }
+            )
         )
 
+
+        TextField(value = textPassword,
+            label = { Text(text = "Input Your Password") },
+            singleLine = true,
+            shape = RoundedCornerShape(50.dp),
+            onValueChange = {
+                val cleanedText = it.text.replace(" ", "")
+                if (it.text.length <= maxChar) {
+                    textPassword =
+                        TextFieldValue(text = cleanedText, selection = it.selection)
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Password
+            ),
+            modifier = Modifier
+                .padding(16.dp)
+                .focusRequester(focusRequester),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    keyboardController?.hide()
+                }),
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = {
+                if (passwordVisible) {
+                    IconButton(onClick = { passwordVisible = false }) {
+                        Icon(
+                            imageVector = Icons.Filled.Visibility,
+                            contentDescription = "hide_password"
+                        )
+                    }
+                } else {
+                    IconButton(
+                        onClick = { passwordVisible = true }) {
+                        Icon(
+                            imageVector = Icons.Filled.VisibilityOff,
+                            contentDescription = "hide_password"
+                        )
+                    }
+                }
+            }
+        )
 
 
         Button(
 
             onClick = {
+                focusRequester.requestFocus()
+                keyboardController?.show()
                 if (acceptedPassAndNumber(textPassword.text, number.text)) {
+                    coroutinScope.launch {
+                        dataStored.saveData(StoreData.numberKey, textPassword.text)
 
-
-                      //  saveData.saveData(number.text, textPassword.text)
-
+                    }
+                    openLoadingAlertDialog.value = true
+                    coroutinScope.launch {
+                        delay(3000)
+                        val intent = Intent(context, MainActivity::class.java)
+                        context.startActivity(intent)
+                        context.finish()
+                    }
 
 
                 } else {
                     openAlertDialog.value = true
                 }
-            }, shape = RoundedCornerShape(15.dp),
+            },
+            shape = RoundedCornerShape(15.dp),
             modifier = Modifier
                 .width(200.dp)
-                .padding(top = 30.dp), colors = ButtonDefaults.buttonColors(Color.DarkGray)
+                .padding(top = 30.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
         ) {
             Text(
-                text = "submit",
-                color = Color.White
+                text = "submit", color = Color.White
             )
         }
+    }
 
 
-        if (openAlertDialog.value) {
+    if (openLoadingAlertDialog.value) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            alertDialog()
+        }
+    }
+    if (openAlertDialog.value) {
 
-            AlertDialogExample(
-                onDismissRequest = { openAlertDialog.value = false },
-                text = when {
+        AlertDialogExample(
+            onDismissRequest = { openAlertDialog.value = false }, text = when {
 
-                    !numberPatternAccepted(number.text) && passAccepted(textPassword.text) -> {
-                        "Number is not accepted"
-                    }
-
-                    !passAccepted(textPassword.text) && numberPatternAccepted(number.text) -> {
-                        "Password is not acceptable"
-
-                    }
-
-
-                    else -> "Please enter correctly"
+                !numberPatternAccepted(number.text) && passAccepted(textPassword.text) -> {
+                    "Number is not accepted"
                 }
-            )
-        }
+
+                !passAccepted(textPassword.text) && numberPatternAccepted(number.text) -> {
+                    "Password is not acceptable"
+                }
+
+                else -> "Please enter correctly"
+            }
+        )
     }
 }
 
@@ -168,32 +258,47 @@ fun passAccepted(pass: String): Boolean {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlertDialogExample(
-    onDismissRequest: () -> Unit,
-    text: String
+    onDismissRequest: () -> Unit, text: String
 ) {
+
     Dialog(
         onDismissRequest = { onDismissRequest() },
         properties = DialogProperties(dismissOnClickOutside = true)
     ) {
-        Column(
+
+        Card(
             modifier = Modifier
-                .height(100.dp)
-                .width(300.dp)
-                .background(Color.White)
-                .padding(16.dp)
+                .fillMaxWidth(0.9f)
+                .height(200.dp),
+            /* colors = CardDefaults.cardColors(
+                 containerColor = AppTheme.colors.dialogBackground
+             ),*/
+            shape = RoundedCornerShape(25.dp),
         ) {
-            Text(
-                text,
-                color = Color.Black
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = { onDismissRequest() },
-                modifier = Modifier.padding(start = 8.dp)
+
+
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("OK")
+                Text(
+                    text, /*color = MaterialTheme.colorScheme.onPrimary*/
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = { onDismissRequest() }, modifier = Modifier
+                        .padding(start = 8.dp)
+                        .fillMaxWidth(.6f)
+                ) {
+                    Text("OK", color = Color.White)
+                }
             }
         }
     }
 }
+
+
+
+
 
