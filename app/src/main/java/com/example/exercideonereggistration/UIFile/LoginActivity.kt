@@ -44,6 +44,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.focus.FocusRequester
@@ -104,7 +105,7 @@ private fun LogingUi(context: Activity) {
 
     ) {
 
-        TextField(value = number,
+        OutlinedTextField(value = number,
             label = { Text(text = "Input Your number") },
             singleLine = true,
             onValueChange = {
@@ -113,11 +114,11 @@ private fun LogingUi(context: Activity) {
                     number = TextFieldValue(text = cleanedText, selection = it.selection)
                 }
             },
-            shape = RoundedCornerShape(50.dp),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next
             ),
+            shape = RoundedCornerShape(50.dp),
             modifier = Modifier.padding(3.dp),
             keyboardActions = KeyboardActions(
                 onDone = {
@@ -127,7 +128,7 @@ private fun LogingUi(context: Activity) {
         )
 
 
-        TextField(value = textPassword,
+        OutlinedTextField(value = textPassword,
             label = { Text(text = "Input Your Password") },
             singleLine = true,
             shape = RoundedCornerShape(50.dp),
