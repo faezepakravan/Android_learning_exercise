@@ -175,11 +175,10 @@ private fun LogingUi(context: Activity) {
 
             onClick = {
                 focusRequester.requestFocus()
-                keyboardController?.show()
+                keyboardController?.hide()
                 if (acceptedPassAndNumber(textPassword.text, number.text)) {
                     coroutinScope.launch {
                         dataStored.saveData(StoreData.numberKey, textPassword.text)
-
                     }
                     openLoadingAlertDialog.value = true
                     coroutinScope.launch {

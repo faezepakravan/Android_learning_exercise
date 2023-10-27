@@ -33,12 +33,14 @@ fun alertDialog() {
         Card(
 
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.errorContainer),
+                containerColor = MaterialTheme.colorScheme.primary),
             shape = RoundedCornerShape(50.dp)
         ) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize(.8f)
+                modifier = Modifier
+                    .fillMaxHeight(.5f)
+                    .fillMaxWidth(.7f)
             ) {
                 Column(
                     verticalArrangement = Arrangement.Center,
@@ -59,7 +61,7 @@ fun alertDialog() {
                     Spacer(modifier = Modifier.height(30.dp))
                     Text(
                         text = "Loading!",
-                        color = MaterialTheme.colorScheme.error
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -74,7 +76,7 @@ fun circularIndicatorProgressBarINDialog(
 
     CircularProgressIndicator(
         modifier = Modifier.fillMaxSize(.5f),
-        color = MaterialTheme.colorScheme.onSecondary,
+        color = MaterialTheme.colorScheme.onPrimary,
         strokeWidth = 6.dp
     )
 }
