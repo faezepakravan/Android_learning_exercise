@@ -223,7 +223,6 @@ private fun LogingUi(context: Activity) {
                     }
                     openLoadingAlertDialog.value = true
                     coroutinScope.launch {
-                        scrollState.animateScrollTo(scrollState.maxValue)
                         delay(3000)
                         val intent = Intent(context, MainActivity::class.java)
                         context.startActivity(intent)
@@ -296,7 +295,7 @@ fun passAccepted(pass: String): Boolean {
     var containsNumber = false
     var containsUppercase = false
     for (i in pass) {
-       if (i.isDigit())containsNumber = true
+        if (i.isDigit()) containsNumber = true
         if (i.isUpperCase()) containsUppercase = true
     }
     return if (pass.length in 9..14 && !pass.matches(pattern) && containsNumber && containsUppercase) return true
@@ -333,7 +332,7 @@ fun AlertDialogExample(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                CustomButton(onClickAction = {onDismissRequest()}, buttonText = "ok")
+                CustomButton(onClickAction = { onDismissRequest() }, buttonText = "ok")
 
 
             }

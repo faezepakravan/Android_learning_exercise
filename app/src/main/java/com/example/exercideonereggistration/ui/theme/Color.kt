@@ -48,6 +48,7 @@ sealed class ThemeColors(
     val onBacground : Color,
     val surafce: Color,
     val primary: Color,
+    val onPrimary : Color,
     val text: Color,
     val button :Color
 ) {
@@ -55,7 +56,8 @@ sealed class ThemeColors(
         bacground = dark_btn,
         onBacground =dark_btn,
         surafce = dialogBackgroundDark,
-        primary = smallTextLight,
+        primary = mainBackgroundLight,
+        onPrimary = mainBackgroundDark,
         text = Color.White,
         button = clear_dark
     )
@@ -65,6 +67,7 @@ sealed class ThemeColors(
         onBacground = dark_btn,
         surafce = additionalBackgroundDark,
         primary = mainBackgroundDark,
+        onPrimary = mainBackgroundLight ,
         text = Color.Black,
         button = clear_dark
     )

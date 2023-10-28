@@ -30,29 +30,29 @@ import kotlinx.coroutines.delay
 @Composable
 fun alertDialog() {
     MaterialTheme {
+        val loading = remember {
+            mutableStateOf(true)
+        }
         Card(
-
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primary),
+                containerColor = MaterialTheme.colorScheme.primary
+            ),
             shape = RoundedCornerShape(50.dp)
         ) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .fillMaxHeight(.5f)
-                    .fillMaxWidth(.7f)
+                    .fillMaxHeight(.35f)
+                    .fillMaxWidth(.55f)
             ) {
                 Column(
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    val loading = remember {
-                        mutableStateOf(true)
-                    }
 
                     LaunchedEffect(Unit) {
-                        delay(4000)
+                        delay(3000)
                         loading.value = false
                     }
                     if (loading.value) {

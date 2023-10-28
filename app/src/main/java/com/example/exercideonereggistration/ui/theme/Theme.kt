@@ -44,7 +44,7 @@ import java.time.format.TextStyle
 
 private val DarkColorPalette = darkColorScheme(
     primary = ThemeColors.Night.primary,
-    onPrimary = ThemeColors.Night.text,
+    onPrimary = ThemeColors.Night.onPrimary,
     surface = ThemeColors.Night.surafce,
     background = ThemeColors.Night.bacground,
     onBackground = ThemeColors.Night.onBacground,
@@ -53,7 +53,7 @@ private val DarkColorPalette = darkColorScheme(
 
 private val LightColorPalette = lightColorScheme(
     primary = ThemeColors.Day.primary,
-    onPrimary = ThemeColors.Day.text,
+    onPrimary = ThemeColors.Day.onPrimary,
     surface = ThemeColors.Day.surafce,
     background = ThemeColors.Day.bacground,
     onBackground = ThemeColors.Day.onBacground,
