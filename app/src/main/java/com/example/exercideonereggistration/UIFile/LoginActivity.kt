@@ -61,6 +61,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.exercideonereggistration.components.alertDialog
+import com.example.exercideonereggistration.dataStorage.dataStore
 import kotlinx.coroutines.launch
 import com.example.exercideonereggistration.ui.theme.AppThemed
 import com.example.exercideonereggistration.ui.theme.CustomButton
@@ -86,7 +87,7 @@ private fun LogingUi(context: Activity) {
     var number by remember { mutableStateOf(TextFieldValue()) }
     var maxChar = 12
     var openAlertDialog = remember { mutableStateOf(false) }
-    val dataStored = StoreData(context)
+    val dataStored = StoreData(context.dataStore)
     val coroutinScope = rememberCoroutineScope()
     var openLoadingAlertDialog = remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current

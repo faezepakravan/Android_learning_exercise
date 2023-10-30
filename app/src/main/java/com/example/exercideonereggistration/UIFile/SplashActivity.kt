@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.example.exercideonereggistration.components.circularIndicatorProgressBar
 import com.example.exercideonereggistration.dataStorage.StoreData
+import com.example.exercideonereggistration.dataStorage.dataStore
 import com.example.exercideonereggistration.ui.theme.AppThemed
 import kotlinx.coroutines.delay
 
@@ -41,7 +42,7 @@ class SplashActivity : ComponentActivity() {
             val loading = remember {
                 mutableStateOf(true)
             }
-            val storeData = StoreData(context)
+            val storeData = StoreData(context.dataStore)
 
             Box(
                 modifier = Modifier
