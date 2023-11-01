@@ -1,4 +1,4 @@
-package com.example.exercideonereggistration.UIFile
+package com.example.exercideonereggistration.uIFile
 
 import android.app.Activity
 import android.content.Intent
@@ -6,74 +6,66 @@ import android.os.Bundle
 import android.view.ViewTreeObserver
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import com.example.exercideonereggistration.dataStorage.StoreData
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Card
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.exercideonereggistration.components.alertDialog
+import com.example.exercideonereggistration.components.AppDialog
+import com.example.exercideonereggistration.components.DialogType
+import com.example.exercideonereggistration.dataStorage.StoreData
 import com.example.exercideonereggistration.dataStorage.dataStore
-import kotlinx.coroutines.launch
 import com.example.exercideonereggistration.ui.theme.AppThemed
-import com.example.exercideonereggistration.ui.theme.CustomButton
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
-class LoginActivity() : ComponentActivity() {
+class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppThemed() {
-                LogingUi(context = this)
+            AppThemed {
+                LoginUI(context = this)
             }
         }
     }
@@ -81,21 +73,24 @@ class LoginActivity() : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-private fun LogingUi(context: Activity) {
+private fun LoginUI(context: Activity) {
 
     var textPassword by remember { mutableStateOf(TextFieldValue("")) }
-    var number by remember { mutableStateOf(TextFieldValue()) }
-    var maxChar = 12
-    var openAlertDialog = remember { mutableStateOf(false) }
+    var textNumber by remember { mutableStateOf(TextFieldValue()) }
+    val maxChar = 12
     val dataStored = StoreData(context.dataStore)
-    val coroutinScope = rememberCoroutineScope()
-    var openLoadingAlertDialog = remember { mutableStateOf(false) }
+    val corotineScope = rememberCoroutineScope()
+    val showErrorDialog = remember { mutableStateOf(false) }
+    val showLoadingDialog = remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
     var passwordVisible by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
+
+    var okPass: Boolean
+    var okNumber: Boolean
 
     DisposableEffect(Unit) {
         val activity = context as ComponentActivity
@@ -118,6 +113,8 @@ private fun LogingUi(context: Activity) {
         }
     }
 
+
+
     Column(
 
         modifier = Modifier
@@ -130,13 +127,17 @@ private fun LogingUi(context: Activity) {
 
     ) {
 
-        OutlinedTextField(value = number,
+        okPass = passAccepted(textPassword.text)
+        okNumber = numberPatternAccepted(textNumber.text)
+
+
+        OutlinedTextField(value = textNumber,
             label = { Text(text = "Input Your number") },
             singleLine = true,
             onValueChange = {
                 val cleanedText = it.text.replace(" ", "")
                 if (cleanedText.length <= 11) {
-                    number = TextFieldValue(text = cleanedText, selection = it.selection)
+                    textNumber = TextFieldValue(text = cleanedText, selection = it.selection)
                 }
             },
             keyboardOptions = KeyboardOptions(
@@ -175,7 +176,7 @@ private fun LogingUi(context: Activity) {
                     textPassword =
                         TextFieldValue(text = cleanedText, selection = it.selection)
                 }
-                coroutinScope.launch { scrollState.animateScrollTo(scrollState.maxValue) }
+                corotineScope.launch { scrollState.animateScrollTo(scrollState.maxValue) }
 
             },
             keyboardOptions = KeyboardOptions(
@@ -210,29 +211,24 @@ private fun LogingUi(context: Activity) {
                 }
             }
         )
-
-
         Button(
-
             onClick = {
-
                 focusRequester.requestFocus()
                 keyboardController?.hide()
-                if (acceptedPassAndNumber(textPassword.text, number.text)) {
-                    coroutinScope.launch {
+                if (okPass && okNumber) {
+                    corotineScope.launch {
                         dataStored.saveData(StoreData.numberKey, textPassword.text)
                     }
-                    openLoadingAlertDialog.value = true
-                    coroutinScope.launch {
+                    showLoadingDialog.value = true
+                    corotineScope.launch {
                         delay(3000)
                         val intent = Intent(context, MainActivity::class.java)
                         context.startActivity(intent)
                         context.finish()
                     }
 
-
                 } else {
-                    openAlertDialog.value = true
+                    showErrorDialog.value = true
                 }
             },
             shape = RoundedCornerShape(15.dp),
@@ -248,97 +244,74 @@ private fun LogingUi(context: Activity) {
 
     }
 
-
-    if (openLoadingAlertDialog.value) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            alertDialog()
-        }
+    if (showLoadingDialog.value) {
+        AppDialog( DialogType.LoadingDialog, null, null)
     }
-    if (openAlertDialog.value) {
 
-        AlertDialogExample(
-            onDismissRequest = { openAlertDialog.value = false }, text = when {
+    if (showErrorDialog.value) {
 
-                !numberPatternAccepted(number.text) && passAccepted(textPassword.text) -> {
-                    "Number is not accepted"
-                }
-
-                !passAccepted(textPassword.text) && numberPatternAccepted(number.text) -> {
-                    "Password is not acceptable"
-                }
-
-                else -> "Please enter correctly"
+        AppDialog(
+            dialogType = DialogType.MessageDialog,
+            message = checkPasswordResultMessage(textNumber.text, textPassword.text),
+            onDismiss = {
+               showErrorDialog.value = false
             }
         )
     }
 }
 
 
-fun acceptedPassAndNumber(pass: String, number: String): Boolean {
-    var passAccepted = passAccepted((pass))
-    var numberPatternAccepted = numberPatternAccepted(number)
+fun checkPasswordResultMessage(number: String, password: String): String {
+    return  when {
+        !numberPatternAccepted(number) -> "Number is not Correct"
+        !passAccepted(password) -> passwordErrorMessage(password)
+        else -> ""
+    }
 
-    return if (passAccepted && numberPatternAccepted) return true
-    else false
 }
+
 
 fun numberPatternAccepted(number: String): Boolean {
     return number.length == 11 && number.startsWith("09")
+}
 
 
+fun passwordErrorMessage(password: String): String {
+    val pattern = "... A sophisticated Regex Pattern ... ".toRegex()
+    var containsNumber = false
+    var containsUppercase = false
+    var containLowercase = false
+    for (i in password) {
+        if (i.isDigit()) containsNumber = true
+        if (i.isUpperCase()) containsUppercase = true
+        if (i.isLowerCase()) containLowercase = true
+    }
+
+    return when {
+        password.length < 8 -> "Your password is too short "
+        !containsNumber -> "Use numbers in your password"
+        !containsUppercase -> "Use Uppercase alphabet in your password"
+        !containLowercase -> "Use Lowercase alphabet in your password"
+        else -> {
+            "your password is not accepted. /n try again!"
+        }
+    }
 }
 
 fun passAccepted(pass: String): Boolean {
-    var pattern = "... A sophisticated Regex Pattern ... ".toRegex()
+    val pattern = "... A sophisticated Regex Pattern ... ".toRegex()
     var containsNumber = false
     var containsUppercase = false
+    var containLowercase = false
     for (i in pass) {
         if (i.isDigit()) containsNumber = true
         if (i.isUpperCase()) containsUppercase = true
+        if (i.isLowerCase()) containLowercase = true
     }
-    return if (pass.length in 9..14 && !pass.matches(pattern) && containsNumber && containsUppercase) return true
+    return if (pass.length in 8..14 && !pass.matches(pattern) && containsNumber && containsUppercase
+        && containLowercase
+    ) return true
     else false
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AlertDialogExample(
-    onDismissRequest: () -> Unit, text: String
-) {
-
-    Dialog(
-        onDismissRequest = { onDismissRequest() },
-        properties = DialogProperties(dismissOnClickOutside = true)
-    ) {
-
-        Card(
-            modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .height(200.dp),
-
-            shape = RoundedCornerShape(25.dp),
-        ) {
-
-
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text, /*color = MaterialTheme.colorScheme.onPrimary*/
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CustomButton(onClickAction = { onDismissRequest() }, buttonText = "ok")
-
-
-            }
-        }
-    }
 }
 
 

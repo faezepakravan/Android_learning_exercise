@@ -3,34 +3,28 @@ package com.example.exercideonereggistration.ui.theme
 import androidx.compose.ui.graphics.Color
 
 
+val mainButton = Color(0xFF451952)
+
+val editTextButtonDark = Color(0xFFEEEEEE)
+val editTextButtonLight = Color(0xFFFFE5E5)
 
 
-    val mainButton = Color(0xFF451952)
+val btnDesignInDialog = Color(0xFfF39F5A)
 
-    val editTextButtonDark = Color(0xFFEEEEEE)
-    val editTextButtonLight = Color(0xFFFFE5E5)
+val dialogBackgroundDark = Color(0xFFF2F6F5)
+val dialogBackgroundLight = Color(0xFF7D7C7C)
 
+val primaryText = Color.White
+val titleBold = Color.White
 
-    val btnDesignInDialog = Color(0xFfF39F5A)
+val smallTextDark = Color(0xFF662549)
+val smallTextLight = Color(0xFF363062)
 
-   val  dialogBackgroundDark = Color(0xFFF2F6F5)
-   val  dialogBackgroundLight = Color(0xFF7D7C7C)
+val mainBackgroundDark = Color(0xFF1F1D36)
+val mainBackgroundLight = Color(0xFFFBF0F0)
 
-    val primaryText = Color.White
-    val titleBold = Color.White
-
-    val smallTextDark = Color(0xFF662549)
-    val smallTextLight = Color(0xFF363062)
-
-   val  mainBackgroundDark = Color(0xFF1F1D36)
-   val  mainBackgroundLight = Color(0xFFFBF0F0)
-
-   val  additionalBackgroundLight = Color(0xFfD8B9C3)
-   val  additionalBackgroundDark = Color(0xFf4D4C7D)
-
-
-
-
+val additionalBackgroundLight = Color(0xFfD8B9C3)
+val additionalBackgroundDark = Color(0xFf4D4C7D)
 
 
 // define your colors for dark theme
@@ -45,16 +39,16 @@ val clear_light = Color(0xFFF1C8D1)
 
 sealed class ThemeColors(
     val bacground: Color,
-    val onBacground : Color,
+    val onBacground: Color,
     val surafce: Color,
     val primary: Color,
-    val onPrimary : Color,
+    val onPrimary: Color,
     val text: Color,
-    val button :Color
+    val button: Color
 ) {
     object Night : ThemeColors(
         bacground = dark_btn,
-        onBacground =dark_btn,
+        onBacground = mainBackgroundLight,
         surafce = dialogBackgroundDark,
         primary = mainBackgroundLight,
         onPrimary = mainBackgroundDark,
@@ -67,7 +61,7 @@ sealed class ThemeColors(
         onBacground = dark_btn,
         surafce = additionalBackgroundDark,
         primary = mainBackgroundDark,
-        onPrimary = mainBackgroundLight ,
+        onPrimary = mainBackgroundLight,
         text = Color.Black,
         button = clear_dark
     )

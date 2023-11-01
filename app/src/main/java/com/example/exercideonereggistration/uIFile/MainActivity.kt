@@ -1,4 +1,4 @@
-package com.example.exercideonereggistration.UIFile
+package com.example.exercideonereggistration.uIFile
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

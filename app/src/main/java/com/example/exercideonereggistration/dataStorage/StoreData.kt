@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
- val  Context.dataStore: DataStore<Preferences> by preferencesDataStore("storeData")
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore("storeData")
 
-class StoreData(private val  preferenceDatastore :DataStore<Preferences>) {
+class StoreData(private val preferenceDatastore: DataStore<Preferences>) {
 
     companion object {
 
