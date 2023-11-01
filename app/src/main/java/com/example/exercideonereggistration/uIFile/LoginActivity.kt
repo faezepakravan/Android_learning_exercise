@@ -56,6 +56,7 @@ import com.example.exercideonereggistration.components.DialogType
 import com.example.exercideonereggistration.dataStorage.StoreData
 import com.example.exercideonereggistration.dataStorage.dataStore
 import com.example.exercideonereggistration.ui.theme.AppThemed
+import com.example.exercideonereggistration.ui.theme.ThemeColors.Day.text
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -83,11 +84,16 @@ private fun LoginUI(context: Activity) {
     val showErrorDialog = remember { mutableStateOf(false) }
     val showLoadingDialog = remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
-    val focusRequester = remember { FocusRequester() }
+    val focueNameRequest = remember { FocusRequester() }
+    val focuePassRequest = remember { FocusRequester() }
+
     var passwordVisible by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
+
+    val numberError by remember { mutableStateOf(false) }
+    val passError by remember { mutableStateOf(false) }
 
     var okPass: Boolean
     var okNumber: Boolean
@@ -121,7 +127,7 @@ private fun LoginUI(context: Activity) {
             .fillMaxSize()
             .padding(16.dp)
             .verticalScroll(state = scrollState)
-            .focusRequester(focusRequester),
+            .focusRequester(focuePassRequest),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
 
@@ -135,6 +141,7 @@ private fun LoginUI(context: Activity) {
             label = { Text(text = "Input Your number") },
             singleLine = true,
             onValueChange = {
+
                 val cleanedText = it.text.replace(" ", "")
                 if (cleanedText.length <= 11) {
                     textNumber = TextFieldValue(text = cleanedText, selection = it.selection)
@@ -142,13 +149,13 @@ private fun LoginUI(context: Activity) {
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done,
+                imeAction = ImeAction.Next,
 
                 ),
             shape = RoundedCornerShape(50.dp),
             modifier = Modifier
                 .padding(3.dp)
-                .focusRequester(focusRequester)
+                .focusRequester(focueNameRequest)
                 .onFocusChanged {
                     if (!it.isFocused) {
                         keyboardController?.hide()
@@ -156,7 +163,7 @@ private fun LoginUI(context: Activity) {
                 },
             keyboardActions = KeyboardActions(
                 onDone = {
-                    focusRequester.requestFocus()
+                    focueNameRequest.requestFocus()
                     focusManager.clearFocus()
                 }
             )
@@ -168,16 +175,11 @@ private fun LoginUI(context: Activity) {
             singleLine = true,
             shape = RoundedCornerShape(50.dp),
             onValueChange = {
-                coroutineScope.launch {
-                    scrollState.animateScrollTo(Int.MAX_VALUE)
-                }
                 val cleanedText = it.text.replace(" ", "")
                 if (it.text.length <= maxChar) {
                     textPassword =
                         TextFieldValue(text = cleanedText, selection = it.selection)
                 }
-                corotineScope.launch { scrollState.animateScrollTo(scrollState.maxValue) }
-
             },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done,
@@ -185,7 +187,7 @@ private fun LoginUI(context: Activity) {
             ),
             modifier = Modifier
                 .padding(16.dp)
-                .focusRequester(focusRequester),
+                .focusRequester(focuePassRequest),
             keyboardActions = KeyboardActions(
                 onDone = {
                     keyboardController?.hide()
@@ -213,7 +215,7 @@ private fun LoginUI(context: Activity) {
         )
         Button(
             onClick = {
-                focusRequester.requestFocus()
+                focuePassRequest.requestFocus()
                 keyboardController?.hide()
                 if (okPass && okNumber) {
                     corotineScope.launch {
@@ -229,6 +231,7 @@ private fun LoginUI(context: Activity) {
 
                 } else {
                     showErrorDialog.value = true
+                    /*if (numberPatternAccepted(textNumber.text)){focueNameRequest.captureFocus()}*/
                 }
             },
             shape = RoundedCornerShape(15.dp),
@@ -245,7 +248,7 @@ private fun LoginUI(context: Activity) {
     }
 
     if (showLoadingDialog.value) {
-        AppDialog( DialogType.LoadingDialog, null, null)
+        AppDialog(DialogType.LoadingDialog, null, null)
     }
 
     if (showErrorDialog.value) {
@@ -254,15 +257,22 @@ private fun LoginUI(context: Activity) {
             dialogType = DialogType.MessageDialog,
             message = checkPasswordResultMessage(textNumber.text, textPassword.text),
             onDismiss = {
-               showErrorDialog.value = false
+                showErrorDialog.value = false
+                if (!numberPatternAccepted(textNumber.text)){focueNameRequest.requestFocus()
+                    textNumber = TextFieldValue()
+                }
+                if (!passAccepted(textPassword.text)){focuePassRequest.requestFocus()
+                    textPassword = TextFieldValue()
+                }
             }
         )
     }
 }
 
 
+
 fun checkPasswordResultMessage(number: String, password: String): String {
-    return  when {
+    return when {
         !numberPatternAccepted(number) -> "Number is not Correct"
         !passAccepted(password) -> passwordErrorMessage(password)
         else -> ""
