@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">ExercideOneReggistration</string>
+    <string name="Loading">Loading</string>
+    <string name="nameInput">Input Your number</string>
+    <string name="passInput">Input Your Password</string>
+    <string name="numberIsNotAccepted">Number is not Correct</string>
+    <string name="passLength">Your password is too short</string>
+    <string name="numberInPass">Use numbers in your password</string>
+    <string name="upperAlphabet">Use Uppercase alphabet in your password</string>
+    <string name="lowerAlphabet">Use Lowercase alphabet in your password</string>
+
+
+
+   <!-- .......appdialog......-->
+    <string name="okBtnText">ok</string>
+
 </resources>

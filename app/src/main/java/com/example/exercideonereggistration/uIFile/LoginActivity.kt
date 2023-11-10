@@ -1,6 +1,7 @@
 package com.example.exercideonereggistration.uIFile
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.ViewTreeObserver
@@ -43,6 +44,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -51,6 +53,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.exercideonereggistration.R
 import com.example.exercideonereggistration.components.AppDialog
 import com.example.exercideonereggistration.components.DialogType
 import com.example.exercideonereggistration.dataStorage.StoreData
@@ -138,7 +141,7 @@ private fun LoginUI(context: Activity) {
 
 
         OutlinedTextField(value = textNumber,
-            label = { Text(text = "Input Your number") },
+            label = { Text(text = stringResource(id = R.string.passInput)) },
             singleLine = true,
             onValueChange = {
 
@@ -171,7 +174,7 @@ private fun LoginUI(context: Activity) {
 
 
         OutlinedTextField(value = textPassword,
-            label = { Text(text = "Input Your Password") },
+            label = { Text(text = stringResource(id = R.string.passInput)) },
             singleLine = true,
             shape = RoundedCornerShape(50.dp),
             onValueChange = {
@@ -255,7 +258,7 @@ private fun LoginUI(context: Activity) {
 
         AppDialog(
             dialogType = DialogType.MessageDialog,
-            message = checkPasswordResultMessage(textNumber.text, textPassword.text),
+            message = checkPasswordResultMessage(textNumber.text, textPassword.text,context),
             onDismiss = {
                 showErrorDialog.value = false
                 if (!numberPatternAccepted(textNumber.text)){focueNameRequest.requestFocus()
@@ -271,10 +274,10 @@ private fun LoginUI(context: Activity) {
 
 
 
-fun checkPasswordResultMessage(number: String, password: String): String {
+fun checkPasswordResultMessage(number: String, password: String, context: Context): String {
     return when {
-        !numberPatternAccepted(number) -> "Number is not Correct"
-        !passAccepted(password) -> passwordErrorMessage(password)
+        !numberPatternAccepted(number) -> context.getString(R.string.numberIsNotAccepted)
+        !passAccepted(password) -> passwordErrorMessage(password, context )
         else -> ""
     }
 
@@ -286,7 +289,7 @@ fun numberPatternAccepted(number: String): Boolean {
 }
 
 
-fun passwordErrorMessage(password: String): String {
+fun passwordErrorMessage(password: String, context : Context): String {
     val pattern = "... A sophisticated Regex Pattern ... ".toRegex()
     var containsNumber = false
     var containsUppercase = false
@@ -298,10 +301,10 @@ fun passwordErrorMessage(password: String): String {
     }
 
     return when {
-        password.length < 8 -> "Your password is too short "
-        !containsNumber -> "Use numbers in your password"
-        !containsUppercase -> "Use Uppercase alphabet in your password"
-        !containLowercase -> "Use Lowercase alphabet in your password"
+        password.length < 8 -> context.getString(R.string.numberInPass)
+        !containsNumber -> context.getString(R.string.numberInPass)
+        !containsUppercase -> context.getString(R.string.upperAlphabet)
+        !containLowercase -> context.getString(R.string.lowerAlphabet)
         else -> {
             "your password is not accepted. /n try again!"
         }

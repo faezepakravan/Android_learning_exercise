@@ -25,8 +25,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.exercideonereggistration.R
 import com.example.exercideonereggistration.components.circularIndicatorProgressBar
 import com.example.exercideonereggistration.dataStorage.StoreData
 import com.example.exercideonereggistration.dataStorage.dataStore
@@ -78,7 +80,7 @@ class SplashActivity : ComponentActivity() {
                         circularIndicatorProgressBar()
                         Spacer(modifier = Modifier.height(30.dp))
                         Text(
-                            text = "Loading!",
+                            text = stringResource(R.string.Loading),
                             fontSize = 40.sp,
                             color = MaterialTheme.colorScheme.onBackground
                         )
