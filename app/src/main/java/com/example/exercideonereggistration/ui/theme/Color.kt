@@ -3,66 +3,42 @@ package com.example.exercideonereggistration.ui.theme
 import androidx.compose.ui.graphics.Color
 
 
-val mainButton = Color(0xFF451952)
+val Green10 = Color(0xff003314)
+val Green20 = Color(0xff006627)
+val Green30 = Color(0xff00993b)
+val Green40 = Color(0xff00cc4e)
+val Green80 = Color(0xff99ffc0)
+val Green90 = Color(0xffccffe0)
 
-val editTextButtonDark = Color(0xFFEEEEEE)
-val editTextButtonLight = Color(0xFFFFE5E5)
+val DarkGreen10 = Color(0xff0d260d)
+val DarkGreen20 = Color(0xff194d19)
+val DarkGreen30 = Color(0xff267326)
+val DarkGreen40 = Color(0xff339933)
+val DarkGreen80 = Color(0xffb3e6b3)
+val DarkGreen90 = Color(0xffd9f2d9)
 
+val Violet10 = Color(0xff330033)
+val Violet20 = Color(0xff660066)
+val Violet30 = Color(0xff990099)
+val Violet40 = Color(0xffcc00cc)
+val Violet80 = Color(0xffff99ff)
+val Violet90 = Color(0xffffccff)
 
-val btnDesignInDialog = Color(0xFfF39F5A)
+val Red10 = Color(0xFF410001)
+val Red20 = Color(0xFF680003)
+val Red30 = Color(0xFF930006)
+val Red40 = Color(0xFFBA1B1B)
+val Red80 = Color(0xFFFFB4A9)
+val Red90 = Color(0xFFFFDAD4)
 
-val dialogBackgroundDark = Color(0xFFF2F6F5)
-val dialogBackgroundLight = Color(0xFF7D7C7C)
+val Grey10 = Color(0xFF191C1D)
+val Grey20 = Color(0xFF2D3132)
+val Grey90 = Color(0xFFE0E3E3)
+val Grey95 = Color(0xFFEFF1F1)
+val Grey99 = Color(0xFFFBFDFD)
 
-val primaryText = Color.White
-val titleBold = Color.White
-
-val smallTextDark = Color(0xFF662549)
-val smallTextLight = Color(0xFF363062)
-
-val mainBackgroundDark = Color(0xFF1F1D36)
-val mainBackgroundLight = Color(0xFFFBF0F0)
-
-val additionalBackgroundLight = Color(0xFfD8B9C3)
-val additionalBackgroundDark = Color(0xFf4D4C7D)
-
-
-// define your colors for dark theme
-val clear_dark = Color(0xFfF39F5A)
-val dark_btn = Color(0xFF222427)
-
-// define your colors for dark theme
-val light_btn = Color(android.graphics.Color.parseColor("#E9F0F4"))
-val light_bg = Color(android.graphics.Color.parseColor("#F6F8F9"))
-val clear_light = Color(0xFFF1C8D1)
-
-
-sealed class ThemeColors(
-    val bacground: Color,
-    val onBacground: Color,
-    val surafce: Color,
-    val primary: Color,
-    val onPrimary: Color,
-    val text: Color,
-    val button: Color
-) {
-    object Night : ThemeColors(
-        bacground = dark_btn,
-        onBacground = mainBackgroundLight,
-        surafce = dialogBackgroundDark,
-        primary = mainBackgroundLight,
-        onPrimary = mainBackgroundDark,
-        text = Color.White,
-        button = clear_dark
-    )
-
-    object Day : ThemeColors(
-        bacground = light_bg,
-        onBacground = dark_btn,
-        surafce = additionalBackgroundDark,
-        primary = mainBackgroundDark,
-        onPrimary = mainBackgroundLight,
-        text = Color.Black,
-        button = clear_dark
-    )
-}
+val GreenGrey30 = Color(0xFF316847)
+val GreenGrey50 = Color(0xFF52ad76)
+val GreenGrey60 = Color(0xFF74be92)
+val GreenGrey80 = Color(0xFFbadec8)
+val GreenGrey90 = Color(0xFFdcefe4)

@@ -24,18 +24,13 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun circularIndicatorProgressBar() {
-    Box(
-        contentAlignment = Alignment.Center,
-    ) {
-        Column(
-            modifier = Modifier,
-            Arrangement.Center
-        ) {
+    Box{
+
             CircularProgressIndicator(
-                modifier = Modifier.size(300.dp),
-                color = MaterialTheme.colorScheme.secondaryContainer,
+                Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.inverseSurface,
                 strokeWidth = 6.dp
             )
         }
     }
-}
+

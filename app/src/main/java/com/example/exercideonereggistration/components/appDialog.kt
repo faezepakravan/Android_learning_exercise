@@ -3,7 +3,6 @@ package com.example.exercideonereggistration.components
 
 import androidx.compose.runtime.Composable
 import com.example.exercideonereggistration.components.DialogType.*
-import com.example.exercideonereggistration.ui.theme.CustomButton
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -31,7 +30,6 @@ import com.example.exercideonereggistration.R
 import kotlinx.coroutines.delay
 
 
-
 @Composable
 fun AppDialog(
 
@@ -47,10 +45,10 @@ fun AppDialog(
         Card(
             modifier = Modifier
                 .fillMaxWidth(0.8f)
-                .fillMaxHeight(.65f),
-            shape = RoundedCornerShape(25.dp),
+                .fillMaxHeight(.3f),
+            MaterialTheme.shapes.large,
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
             )
         ) {
             Box(contentAlignment = Alignment.Center) {
@@ -62,6 +60,7 @@ fun AppDialog(
                             }
                         }
                     }
+
                     LoadingDialog -> LoadingDialogContent()
                 }
             }
@@ -91,14 +90,18 @@ fun LoadingDialogContent() {
             loading.value = false
         }
         if (loading.value) {
-            Box(modifier = Modifier.fillMaxSize(.5f)) {
+            Box(/*modifier = Modifier.fillMaxSize(.5f*/) {
                 Box(modifier = Modifier.wrapContentSize()) {
-                    Column(modifier = Modifier,
-                    Arrangement.Center) {
+                    Column(
+                        modifier = Modifier,
+                        Arrangement.Center
+                    ) {
                         circularIndicatorProgressBar()
                         Spacer(modifier = Modifier.height(20.dp))
-                        Text(text = stringResource(id = R.string.Loading),
-                        color =  MaterialTheme.colorScheme.onPrimary)
+                        Text(
+                            text = stringResource(id = R.string.Loading),
+                            color = MaterialTheme.colorScheme.surfaceVariant
+                        )
                     }
 
 
@@ -118,12 +121,15 @@ fun MessageDialogContent(onDismissRequest: () -> Unit, text: String) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text, /*color = MaterialTheme.colorScheme.onPrimary*/
+            text, color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        CustomButton(onClickAction = onDismissRequest, 
-            buttonText = stringResource(id = R.string.okBtnText))
+        CustomButton(
+            onClickAction = onDismissRequest,
+            buttonText = stringResource(id = R.string.okBtnText),
+            modifier = Modifier
+        )
 
     }
 }

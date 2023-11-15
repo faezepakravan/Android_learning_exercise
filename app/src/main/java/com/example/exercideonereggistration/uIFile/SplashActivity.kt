@@ -11,10 +11,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,7 +37,9 @@ import com.example.exercideonereggistration.components.circularIndicatorProgress
 import com.example.exercideonereggistration.dataStorage.StoreData
 import com.example.exercideonereggistration.dataStorage.dataStore
 import com.example.exercideonereggistration.ui.theme.AppThemed
+import com.example.exercideonereggistration.ui.theme.Green10
 import kotlinx.coroutines.delay
+import org.w3c.dom.Text
 
 
 class SplashActivity : ComponentActivity() {
@@ -66,28 +72,29 @@ class SplashActivity : ComponentActivity() {
                 loading.value = false
             }
             if (loading.value) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+
+                Column(
+                    modifier = Modifier,
+                    // verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Column(
+                    Box(
                         modifier = Modifier
-                            .wrapContentSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .height(200.dp)
+                            .width(200.dp)
+
                     ) {
-                        Box(modifier = Modifier.border(3.dp, Color.Green))
                         circularIndicatorProgressBar()
-                        Spacer(modifier = Modifier.height(30.dp))
-                        Text(
-                            text = stringResource(R.string.Loading),
-                            fontSize = 40.sp,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
                     }
+                    Spacer(modifier = Modifier.height(5.dp))
+                    Text(
+                        text = stringResource(R.string.Loading),
+                        fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+                        fontStyle = MaterialTheme.typography.headlineSmall.fontStyle,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
                 }
             }
-
             LaunchedEffect(key1 = valid) {
                 delay(4000)
                 val number = storeData.getData(StoreData.numberKey)
@@ -98,10 +105,8 @@ class SplashActivity : ComponentActivity() {
                 } else {
                     val intent = Intent(context, LoginActivity::class.java)
                     context.startActivity(intent)
-
                 }
             }
-
         }
     }
 }

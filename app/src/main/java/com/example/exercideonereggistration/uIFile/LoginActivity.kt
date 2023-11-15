@@ -3,13 +3,19 @@ package com.example.exercideonereggistration.uIFile
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.view.ViewTreeObserver
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -20,6 +26,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,8 +49,11 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -55,11 +65,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.exercideonereggistration.R
 import com.example.exercideonereggistration.components.AppDialog
+import com.example.exercideonereggistration.components.CustomButton
 import com.example.exercideonereggistration.components.DialogType
 import com.example.exercideonereggistration.dataStorage.StoreData
 import com.example.exercideonereggistration.dataStorage.dataStore
 import com.example.exercideonereggistration.ui.theme.AppThemed
-import com.example.exercideonereggistration.ui.theme.ThemeColors.Day.text
+import com.example.exercideonereggistration.ui.theme.space
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -98,6 +109,10 @@ private fun LoginUI(context: Activity) {
     val numberError by remember { mutableStateOf(false) }
     val passError by remember { mutableStateOf(false) }
 
+
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+
     var okPass: Boolean
     var okNumber: Boolean
 
@@ -128,7 +143,7 @@ private fun LoginUI(context: Activity) {
 
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(MaterialTheme.space.medium)
             .verticalScroll(state = scrollState)
             .focusRequester(focuePassRequest),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -173,7 +188,8 @@ private fun LoginUI(context: Activity) {
         )
 
 
-        OutlinedTextField(value = textPassword,
+        OutlinedTextField(
+            value = textPassword,
             label = { Text(text = stringResource(id = R.string.passInput)) },
             singleLine = true,
             shape = RoundedCornerShape(50.dp),
@@ -216,8 +232,9 @@ private fun LoginUI(context: Activity) {
                 }
             }
         )
-        Button(
-            onClick = {
+        Spacer(modifier = Modifier.height(screenHeight * 1 / 30))
+        CustomButton(
+            onClickAction = {
                 focuePassRequest.requestFocus()
                 keyboardController?.hide()
                 if (okPass && okNumber) {
@@ -234,20 +251,11 @@ private fun LoginUI(context: Activity) {
 
                 } else {
                     showErrorDialog.value = true
-                    /*if (numberPatternAccepted(textNumber.text)){focueNameRequest.captureFocus()}*/
                 }
             },
-            shape = RoundedCornerShape(15.dp),
+            buttonText = stringResource(id = R.string.submitButton),
             modifier = Modifier
-                .width(200.dp)
-                .padding(top = 30.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-        ) {
-            Text(
-                text = "submit", color = Color.White
-            )
-        }
-
+        )
     }
 
     if (showLoadingDialog.value) {
@@ -258,13 +266,15 @@ private fun LoginUI(context: Activity) {
 
         AppDialog(
             dialogType = DialogType.MessageDialog,
-            message = checkPasswordResultMessage(textNumber.text, textPassword.text,context),
+            message = checkPasswordResultMessage(textNumber.text, textPassword.text, context),
             onDismiss = {
                 showErrorDialog.value = false
-                if (!numberPatternAccepted(textNumber.text)){focueNameRequest.requestFocus()
+                if (!numberPatternAccepted(textNumber.text)) {
+                    focueNameRequest.requestFocus()
                     textNumber = TextFieldValue()
                 }
-                if (!passAccepted(textPassword.text)){focuePassRequest.requestFocus()
+                if (!passAccepted(textPassword.text)) {
+                    focuePassRequest.requestFocus()
                     textPassword = TextFieldValue()
                 }
             }
@@ -273,11 +283,10 @@ private fun LoginUI(context: Activity) {
 }
 
 
-
 fun checkPasswordResultMessage(number: String, password: String, context: Context): String {
     return when {
         !numberPatternAccepted(number) -> context.getString(R.string.numberIsNotAccepted)
-        !passAccepted(password) -> passwordErrorMessage(password, context )
+        !passAccepted(password) -> passwordErrorMessage(password, context)
         else -> ""
     }
 
@@ -289,7 +298,7 @@ fun numberPatternAccepted(number: String): Boolean {
 }
 
 
-fun passwordErrorMessage(password: String, context : Context): String {
+fun passwordErrorMessage(password: String, context: Context): String {
     val pattern = "... A sophisticated Regex Pattern ... ".toRegex()
     var containsNumber = false
     var containsUppercase = false

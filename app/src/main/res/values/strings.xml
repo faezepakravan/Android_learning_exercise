@@ -13,5 +13,6 @@
 
    <!-- .......appdialog......-->
     <string name="okBtnText">ok</string>
+    <string name="submitButton">Submit</string>
 
 </resources>
